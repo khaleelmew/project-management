@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Http\Request;
@@ -13,4 +14,5 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('projects', ProjectController::class);
+    Route::apiResource('attributes', AttributeController::class);
 });
