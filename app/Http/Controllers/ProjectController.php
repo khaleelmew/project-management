@@ -18,9 +18,40 @@ class ProjectController extends Controller
     use ApiResponse;
     public function index(Request $request)
     {
-        $data=Project::with(['attribute_values','users']);
-        
-       return $this->success_response('Projects list',$data->get());
+        $filters=$request->filters;
+        $operators = ['=', '>', '<','>=','<=', 'LIKE','!='];
+        $data=Project::with(['attribute_values.attribute','users']);
+        if(!empty($filters)){
+            foreach($filters as $key=> $filter){
+                if(empty($filter['value'])||empty($filter['operator'])||!in_array($filter['operator'],$operators)) continue;
+                if(in_array($key,['name','status'])){
+                   
+                    $data->where($key,$filter['operator'],$filter['value']);
+
+                }else{
+                    $attribute = Attribute::where('slug', $key)->first(); //changed to slug because name can be anything for showing purpose;
+                    if ($attribute) {
+                        $data->whereHas('attribute_values', function ($q) use ($filter,$attribute) {
+                            $q->where('attribute_id', $attribute->id);
+                            if($attribute->type=='date'){
+                                $q->whereDate('value', $filter['operator'], $filter['value']);
+                   
+                            }else{
+                                $q->where('value', $filter['operator'], $filter['operator'] === 'LIKE' ? "%".$filter['value']."%" : $filter['value']);
+                   
+                            }
+                        });
+                    }
+                }
+              
+            }
+        }   
+        if(!empty($request->paginate)){
+            $data=$data->simplePaginate($request->limit??20);
+        }else{
+            $data=$data->get();
+        }
+       return $this->success_response('Projects list',$data);
     }
 
     /**

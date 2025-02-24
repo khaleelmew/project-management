@@ -11,10 +11,10 @@ class AttributeValue extends Model
 
     protected $fillable = ['attribute_id', 'entity_id','type', 'value','entity_type'];
 
-    // public function attribute()
-    // {
-    //     return $this->belongsTo(Attribute::class);
-    // }
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class,'attribute_id');
+    }
     public function entity()
     {
         return $this->morphTo(); 
