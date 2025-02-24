@@ -44,11 +44,17 @@ class Project extends Model
         $rquired_attr=collect($attributes_values)->pluck('attribute_id')->toArray();
         if(!empty($rquired_attr)){
             $attributes=Attribute::whereIn('id',$rquired_attr)->get();
-          
+            $available_attrs=$attributes->pluck('id')->toArray();
+            // dd(array_diff($rquired_attr,$available_attrs));
+            $non_existing_attrs=array_diff($rquired_attr,$available_attrs);
+            if(!empty($non_existing_attrs)){
+                // dd($non_existing_attrs);
+                return ['status'=>false,'msg'=>'These attibutes are not defined'.' '.implode(', ',$non_existing_attrs)];
+            }
             $attributes=Attribute::where('required',true)->whereNotIn('id',$rquired_attr)->get();
             if(!empty($attributes->count())){
                 return ['status'=>false,'msg'=>'These fields requried'.' '.implode(', ',$attributes->pluck('name')->toArray())];
-               
+               //requred attribute check, same way unique can be checked --pending
             }
             
         }
