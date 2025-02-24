@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('time_sheets', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('status');
-            $table->double('total_hours');
+            $table->text('task_name');
             $table->timestamps();
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->double('hours');
+            $table->date('sheet_date');
         });
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('time_sheets');
     }
 };

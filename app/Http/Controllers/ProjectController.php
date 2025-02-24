@@ -18,7 +18,8 @@ class ProjectController extends Controller
     use ApiResponse;
     public function index(Request $request)
     {
-        $data=Project::query()->with(['attribute_values','users']);
+        $data=Project::with(['attribute_values','users']);
+        
        return $this->success_response('Projects list',$data->get());
     }
 

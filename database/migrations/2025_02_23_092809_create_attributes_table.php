@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('type', ['text', 'date', 'number', 'select']);
             $table->boolean('required');
             $table->boolean('unique');
+            $table->text('entity_type');
             $table->timestamps();
         });
     }

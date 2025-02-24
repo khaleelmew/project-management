@@ -14,7 +14,12 @@ class AttributeController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->success_response('Attribute deleted successfully',Attribute::all());
+        $attributes=Attribute::query();
+        if(!empty($request->entity_type)){
+            $attributes->where('entity_type',$request->entity_type);
+            //filtering for form type like project or in futre task. 
+        }
+        return $this->success_response('Attribute deleted successfully',$attributes->get());
         
     }
 
@@ -40,13 +45,8 @@ class AttributeController extends Controller
         if ($validator->fails()) {
             return $this->error_response('Create Error',$validator->errors());
         }
-        $attr= Attribute::create([
-            'name'=>$request->name,
-            'type'=>$request->type,
-            "slug"=>'s',
-            'required'=>!empty($request->required),
-            'unique'=>!empty($request->unique),
-        ]);
+        $request['entity_type']='project';
+        $attr=Attribute::store_attribute($request);
         return $this->success_response('Attribute created successfully',$attr);
     }
 
@@ -71,28 +71,33 @@ class AttributeController extends Controller
      */
     public function update(Request $request, Attribute $attribute)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'type' => 'sometimes|required|in:text,date,number,select',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:text,date,number,select',
+            
         ]);
-
-        $attribute->update([
-            'name' => $request->name ,
-            'type' => $request->type ,
-            'slug' => 'sadas',
-            'required' =>!empty($request->required),
-            'unique' => !empty($request->unique),
-        ]);
+        if ($validator->fails()) {
+            return $this->error_response('Create Error',$validator->errors());
+        }
+        $request['entity_type']='project';
+      
+        $attribute=Attribute::store_attribute($request,$attribute->id);
         return $this->success_response('Attribute updated successfully',$attribute);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Attribute $attribute)
     {
-        
-        $attribute->delete();
+       
+        if(!empty($attribute->attr_values)){
+            return $this->error_response('Delete error !, Attribute values exisit');
+        }
+
+        // $attribute->delete();
         return $this->success_response('Attribute deleted successfully',$attribute);
     }
+
+
 }

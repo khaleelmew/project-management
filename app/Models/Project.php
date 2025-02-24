@@ -23,7 +23,7 @@ class Project extends Model
 }
     public function users()
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class);
     }
     public function attribute_values()
     {
@@ -73,6 +73,9 @@ class Project extends Model
          
         }
         return ['status'=>true,'data'=>$project];
+    }
+    public function time_sheets(){
+     return $this->hasMany(TimeSheet::class);   
     }
 
 }
