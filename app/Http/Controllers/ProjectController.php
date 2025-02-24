@@ -46,6 +46,7 @@ class ProjectController extends Controller
               
             }
         }   
+        $data->orderBy('id','desc');
         if(!empty($request->paginate)){
             $data=$data->simplePaginate($request->limit??20);
         }else{
