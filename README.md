@@ -8,6 +8,7 @@ This is a RESTful API built with Laravel using the EAV (Entity-Attribute-Value) 
 - Project filtering on regular and EAV attributes
 - Database transactions for data consistency
 - Postman collection for API testing
+- Sample database dump 
 
 Getting Started
 
