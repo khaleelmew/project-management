@@ -37,7 +37,7 @@ class AuthController extends Controller
             'password'   => Hash::make($request->password), 
         ]);
         $token = $user->createToken('Access Token')->accessToken;
-        return $this->error_response('Register Success',['token'=>$token,'user'=>$user]);
+        return $this->success_response('Register Success',['token'=>$token,'user'=>$user]);
     }
 
     public function login(Request $request){
@@ -56,7 +56,13 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('Access Token')->accessToken;
 
-        return response()->json(['token' => $token, 'user' => $user]);
+        return $this->success_response('Login Success',['token'=>$token,'user'=>$user]);
+    }
+    public function logout(Request $request){
+       
+        $user=Auth::user();
+        $user->token()->revoke();
+        return $this->success_response('Logout Success');
     }
     
 }
