@@ -25,7 +25,7 @@ Installation
 3. Set up the environment:
    bash
    cp .env.example .env
-   php artisan key:generate
+ 
    
 4. Configure database in `.env`:
    env
@@ -38,7 +38,7 @@ Installation
    
 5. Run migrations and seeders:
    bash
-   php artisan migrate --seed
+   php artisan migrate 
    
 6. Install Passport:
    bash
@@ -54,7 +54,7 @@ Handled with Laravel Passport.
 Using Postman
 1. Import `postman_collection.json` into Postman.
 2. Use `/api/login` to get the access token.
-3. Set `ACCESS_TOKEN` in collection variables for authenticated requests.
+3. Auto Set `ACCESS_TOKEN` in collection variables for authenticated requests.
 
 Models & Relationships
 
@@ -78,6 +78,10 @@ AttributeValue
 - Fields: attribute_id, entity_id, entity_type, value
 - Uses polymorphic relation to support multiple entity types
 - Prevents duplicates with `updateOrCreate`,
+TimeSheet
+- Links timesheets to entities (Project, and User)
+- Fields: user_id, project_id, hours, sheet_date (date)
+- Prevents duplicates with `updateOrCreate`,
 
 Project Filtering
 Filter projects by fields or dynamic attributes using query parameters.
@@ -97,9 +101,12 @@ API Endpoints
 - Attributes: `/api/attributes`
 - Attribute Values: `/api/attribute-values`
 
-Refer to the Postman collection for request and response details.
+Refer to the Postman collection for request and response details and examples.
 
 Notes
 - API examples are available in the Postman collection.
 - Filtering works for both regular and dynamic attributes.
 - No additional setup required beyond the steps listed.
+Test credentials 
+    "email":"khaleel@test6.com",
+    "password":"12345678"
